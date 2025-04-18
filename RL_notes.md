@@ -55,8 +55,88 @@
 - $$Q_\pi(\textcolor{green}{s_t},\textcolor{red}{a_t})=\mathbb{E}[U_t|\textcolor{green}{S_t=s_t},\textcolor{red}{A_t=a_t}]$$
 - 由于 $U_t$ 具有随机性，由 $\color{red}A_t,A_{t+1},A_{t+2},\cdots$ 和 $\color{green}S_t,S_{t+1},S_{t+2},\cdots$ 所决定
 - $\mathbb{E}$ : 求期望可以将 $t$ 以后的随机性积分掉，变为一个确切的值
-- 直观意义：如果用 $\text{policy}\ \pi$ 在 $\textcolor{green}{s_t}$ 状态下，做 $\textcolor{red}{a_t}$ 是好还是坏，根据分数
+- 直观意义：如果用 $\text{policy}\ \pi$ 在 $\textcolor{green}{s_t}$ 状态下，做 $\textcolor{red}{a_t}$ 是好还是坏，根据分数来判断
 
 ##### 1.1.7 Optimal action-value function $Q^*(\textcolor{green}{s},\textcolor{red}{a})$
 
-- 
+- $$Q^*(\textcolor{green}{s},\textcolor{red}{a})=\max\limits_{\pi} Q(\textcolor{green}{s},\textcolor{red}{a})$$
+- 最好的 $\text{policy}\ \pi$ 是让 $Q(\textcolor{green}{s},\textcolor{red}{a})$ 最大的 $\pi$ 
+- 直观意义：当智能体处于状态 $\textcolor{green}s$ 时，采取动作 $\textcolor{red}a$ 之后，按照最优策略继续和环境交互，所能获得的期望累积折扣奖励。
+
+##### 1.1.8 State-value function $V_{\pi}(\textcolor{green}{s_t})$
+
+- $$V_{\pi}(\textcolor{green}{s_t})=\mathbb{E}_{\textcolor{red}{A}}[Q_\pi(\textcolor{green}{s_t},\textcolor{red}{A})]$$， $\textcolor{red}{A}\sim \pi(\cdot|s_t)$
+- 评价 $\text{policy}\ \pi$ 的好坏，$\pi$ 越好 $\mathbb{E}[V_\pi(S)]$ 越大
+- 直观意义：$V_\pi$ 表示当前局势好还是不好
+
+### 2 如何用强化学习打游戏（二选一）
+
+#### 2.1 假设有一个好的 $\text{policy}\ \pi(a|s)$
+
+- 观察当前的 $s_t$ 
+- 根据决策随机采样： $\textcolor{red}{a_t}\sim \pi(\cdot|s_t)$
+
+#### 2.2 假设已知 $Q^*(\textcolor{green}{s},\textcolor{red}{a})$
+
+- 观察当前的 $s_t$ ，作为输入
+-  $\textcolor{red}{a_t}=\text{argmax}_\textcolor{red}{a} Q^*(\textcolor{green}{s_t},\textcolor{red}{a})$
+
+-  $Q^*(\textcolor{green}{s},\textcolor{red}{a})$ 告诉我们在 $s_t$ 下每一个 $\textcolor{red}{a}$ 的价值，选择使得  $Q^*(\textcolor{green}{s},\textcolor{red}{a})$ 最大的 $\textcolor{red}{a}$
+
+### 3 [OpenAI Gym](https://www.gymlibrary.dev/index.html)
+
+#### 3.1 Classical control problems
+
+
+<style>
+    image-title {
+        text-align: center;
+        background-color: #e0e0e0; 
+        padding: 8px; 
+        border-radius: 5px; 
+    }
+</style>
+<table>
+    <tr>
+        <td><img src="img/RL_notes/cart_pole.gif" alt="Cart Pole"></td>
+        <td><img src="img/RL_notes/pendulum.gif" alt="Pendulum"></td>
+    </tr>
+    <tr>
+        <td class="image-title">Cart Pole</td>
+        <td class="image-title">Pendulum</td>
+    </tr>
+</table>
+
+#### 3.2 Atari Games
+
+<table>
+    <tr>
+        <td><img src="img/RL_notes/boxing.gif" alt="Boxing"></td>
+        <td><img src="img/RL_notes/pong.gif" alt="Pong"></td>
+        <td><img src="img/RL_notes/tennis.gif" alt="Tennis"></td>
+    </tr>
+    <tr>
+        <td class="image-title">Boxing</td>
+        <td class="image-title">Pong</td>
+        <td class="image-title">Tennis</td>
+    </tr>
+</table>
+#### 3.3 MuJoCo
+
+![img](img/RL_notes/ant.gif)
+
+![img](https://www.gymlibrary.dev/_static/videos/mujoco/humanoid.gif)
+
+![img](https://www.gymlibrary.dev/_static/videos/mujoco/swimmer.gif)
+<table>
+    <tr>
+        <td><img src="img/RL_notes/ant.gif" alt="Ant"></td>
+        <td><img src="img/RL_notes/pong.gif" alt="Pong"></td>
+        <td><img src="img/RL_notes/tennis.gif" alt="Tennis"></td>
+    </tr>
+    <tr>
+        <td class="image-title">Ant</td>
+        <td class="image-title">Pong</td>
+        <td class="image-title">Tennis</td>
+    </tr>
+</table>
