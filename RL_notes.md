@@ -69,6 +69,10 @@
 - 评价 $\text{policy}\ \pi$ 的好坏，$\pi$ 越好 $\mathbb{E}[V_\pi(S)]$ 越大
 - 直观意义：$V_\pi$ 表示当前局势好还是不好
 
+#### 1.2 Summary
+
+![image-20250419001534063](img/RL_notes/image-20250419001534063.png)
+
 ### 2 如何用强化学习打游戏（二选一）
 
 #### 2.1 假设有一个好的 $\text{policy}\ \pi(a|s)$
@@ -79,31 +83,25 @@
 #### 2.2 假设已知 $Q^*(\textcolor{green}{s},\textcolor{red}{a})$
 
 - 观察当前的 $s_t$ ，作为输入
--  $\textcolor{red}{a_t}=\text{argmax}_\textcolor{red}{a} Q^*(\textcolor{green}{s_t},\textcolor{red}{a})$
+- $\textcolor{red}{a_t}=\text{argmax}_\textcolor{red}{a} Q^*(\textcolor{green}{s_t},\textcolor{red}{a})$
+- $Q^*(\textcolor{green}{s},\textcolor{red}{a})$ 告诉我们在 $s_t$ 下每一个 $\textcolor{red}{a}$ 的价值，选择使得  $Q^*(\textcolor{green}{s},\textcolor{red}{a})$ 最大的 $\textcolor{red}{a}$
 
--  $Q^*(\textcolor{green}{s},\textcolor{red}{a})$ 告诉我们在 $s_t$ 下每一个 $\textcolor{red}{a}$ 的价值，选择使得  $Q^*(\textcolor{green}{s},\textcolor{red}{a})$ 最大的 $\textcolor{red}{a}$
+#### 2.3 Summary
+
+![image-20250419001310869](img/RL_notes/image-20250419001310869.png)
 
 ### 3 [OpenAI Gym](https://www.gymlibrary.dev/index.html)
 
 #### 3.1 Classical control problems
 
-
-<style>
-    image-title {
-        text-align: center;
-        background-color: #e0e0e0; 
-        padding: 8px; 
-        border-radius: 5px; 
-    }
-</style>
 <table>
     <tr>
-        <td><img src="img/RL_notes/cart_pole.gif" alt="Cart Pole"></td>
-        <td><img src="img/RL_notes/pendulum.gif" alt="Pendulum"></td>
+        <td><img src="img/RL_notes/cart_pole.gif" alt="Cart Pole" style="width: 100%; height: auto; border-radius: 8px"></td>
+        <td><img src="img/RL_notes/pendulum.gif" alt="Pendulum" style="width: 100%; height: auto; border-radius: 8px"></td>
     </tr>
     <tr>
-        <td class="image-title">Cart Pole</td>
-        <td class="image-title">Pendulum</td>
+        <td style="text-align: center; padding: 8px; font-weight: bold">Cart Pole</td>
+        <td style="text-align: center; padding: 8px; font-weight: bold">Pendulum</td>
     </tr>
 </table>
 
@@ -111,32 +109,26 @@
 
 <table>
     <tr>
-        <td><img src="img/RL_notes/boxing.gif" alt="Boxing"></td>
-        <td><img src="img/RL_notes/pong.gif" alt="Pong"></td>
-        <td><img src="img/RL_notes/tennis.gif" alt="Tennis"></td>
+        <td><img src="img/RL_notes/boxing.gif" alt="Boxing" style="width: 100%; height: auto; border-radius: 8px"></td>
+        <td><img src="img/RL_notes/pong.gif" alt="Pong" style="width: 100%; height: auto; border-radius: 8px"></td>
+        <td><img src="img/RL_notes/tennis.gif" alt="Tennis" style="width: 100%; height: auto; border-radius: 8px"></td>
     </tr>
     <tr>
-        <td class="image-title">Boxing</td>
-        <td class="image-title">Pong</td>
-        <td class="image-title">Tennis</td>
+        <td style="text-align: center; padding: 8px; font-weight: bold">Boxing</td>
+        <td style="text-align: center; padding: 8px; font-weight: bold">Pong</td>
+        <td style="text-align: center; padding: 8px; font-weight: bold">Tennis</td>
     </tr>
 </table>
 #### 3.3 MuJoCo
-
-![img](img/RL_notes/ant.gif)
-
-![img](https://www.gymlibrary.dev/_static/videos/mujoco/humanoid.gif)
-
-![img](https://www.gymlibrary.dev/_static/videos/mujoco/swimmer.gif)
 <table>
     <tr>
-        <td><img src="img/RL_notes/ant.gif" alt="Ant"></td>
-        <td><img src="img/RL_notes/pong.gif" alt="Pong"></td>
-        <td><img src="img/RL_notes/tennis.gif" alt="Tennis"></td>
+        <td><img src="img/RL_notes/ant.gif" alt="Ant" style="width: 100%; height: auto; border-radius: 8px"></td>
+        <td><img src="img/RL_notes/humanoid.gif" alt="Humanoid" style="width: 100%; height: auto; border-radius: 8px"></td>
+        <td><img src="img/RL_notes/swimmer.gif" alt="Swimmer" style="width: 100%; height: auto; border-radius: 8px"></td>
     </tr>
     <tr>
-        <td class="image-title">Ant</td>
-        <td class="image-title">Pong</td>
-        <td class="image-title">Tennis</td>
+        <td style="text-align: center; padding: 8px; font-weight: bold">Ant</td>
+        <td style="text-align: center; padding: 8px; font-weight: bold">Humanoid</td>
+        <td style="text-align: center; padding: 8px; font-weight: bold">Swimmer</td>
     </tr>
 </table>
