@@ -1,4 +1,6 @@
-## 强化学习入门
+# 强化学习入门
+
+## 第一章 基本概念
 
 ### 1 基本原理
 
@@ -132,3 +134,85 @@
         <td style="text-align: center; padding: 8px; font-weight: bold">Swimmer</td>
     </tr>
 </table>
+------
+
+
+
+## 第二章 价值学习
+
+### 1 Deep Q-Network (DQN)
+
+#### 1.1 近似 Q Function
+
+- $\text{Goal}$ : 获得最大的总奖励
+- $\text{Question}$ : 如果我们已知 $Q^*(\textcolor{green}{s},\textcolor{red}{a})$ ，最好的动作 $$\textcolor{red}{a^*}=\mathop{\arg\max}\limits_{a}\ Q^*(\textcolor{green}{s},\textcolor{red}{a})$$
+- $\text{Challenge}$ : 我们不知道 $Q^*(\textcolor{green}{s},\textcolor{red}{a})$
+  - $\text{Solution}$ : $\text{Deep Q-Network (DQN)}$
+  - 用神经网络 $Q(\textcolor{green}{s},\textcolor{red}{a};\text{w})$ 近似 $Q^*(\textcolor{green}{s},\textcolor{red}{a})$
+  - $\text{w}$ 是神经网络的参数，通过奖励学习神经网络，再用神经网络给动作打分，神经网络会逐步改进
+
+- 以 $\text{super\_mario}$ 为例
+
+  ![image-20250419171319785](img/RL_notes/image-20250419171319785.png)
+
+  - 图片作为输入
+  - 用卷积层将图片变为特征向量
+  - 最后用全连接层将特征映射到输出向量（对于 $\textcolor{red}{a}$ 的打分）
+
+#### 1.2 用DQN打游戏
+
+- ![image-20250419172027574](img/RL_notes/image-20250419172027574.png)
+  - agent 通过 DQN 得到当前状态 $\textcolor{green}{s\\_t}$ 最优的动作 $\textcolor{red}{a\\_t}$ 
+  - 环境根据状态转移函数随机得到新的环境$\textcolor{green}{s_{t+1}}$ 
+  - 得到应对的奖励 $\textcolor{blue}{r\\_t}$
+
+### 2 TD Learning
+
+#### 2.1 举例说明
+
+<img src="img/RL_notes/image-20250419174919780.png" alt="image-20250419174919780" style="zoom:50%;" />
+
+- 存在缺陷：需要走完全程才能利用梯度下降进行模型更新
+
+<img src="img/RL_notes/image-20250419233722311.png" alt="image-20250419233722311" style="zoom:50%;" />
+
+- 考虑能否根据部分的行程来更新模型
+- 可以考虑TD算法进行改进，向预测过程加入部分真实数据，让预测值更接近真实值
+
+<img src="img/RL_notes/image-20250420000343791.png" alt="image-20250420000343791" style="zoom:50%;" />
+
+- 预计NYC到DC为 ```400min``` ，而真实值是 ```300min```
+- $\text{TD error}:\delta=400-300=100$
+- TD 算法需要用梯度下降减少 $\text{TD error}$
+
+#### 2.2 TD Learning for DQN
+
+- 样例中的 TD 的体现![image-20250420141806797](img/RL_notes/image-20250420141806797.png)
+
+- 回忆起折扣奖励，具有类似的形式![image-20250420141856889](img/RL_notes/image-20250420141856889.png)
+
+
+
+##### 2.2.1 公式梳理
+
+-  $Q(\textcolor{green}{s_t},\textcolor{red}{a_t};\mathbf{\text{w}})$ 作为 $\text{DQN}$ 在 $t$ 时刻的输出，作为 $\mathbb{E}[U_t]$ 的近似值
+
+  > $Q(\textcolor{green}{s_t},\textcolor{red}{a_t};\mathbf{\text{w}})$ 从 $t$  开始到结束所能获得的总奖励
+
+- 左边是预测值，右边是TD target。反应到样例中即为，左边是从$\text{NYC}\rightarrow\text{ATL}$ ，右边是 $\text{NYC}\rightarrow\text{DC} $ + $\text{DC}\rightarrow\text{ATL} $
+
+  <img src="img/RL_notes/image-20250420143504219.png" alt="image-20250420143504219" style="zoom:80%;" />
+
+##### 2.2.2 训练 DQN 模型
+
+- 通过当前的状态以及 agent 执行的动作
+- 用 DQN 进行计算，输入是 $s_t,a_t$ ，输出是对于 $a_t$ 的打分，记作 $q_t$ 
+- 用反向传播对 DQN 求导，得到梯度 $d_t$
+- 环境更新状态 $s_{t+1}$ 并更新奖励 $r_t$
+- 利用公式求出 TD target ，记作 $y_t$
+- 利用梯度下降计算新的 $w_{t+1}$ ，目的减少 loss ，完成一轮 TD 算法的迭代
+
+![image-20250420145601388](img/RL_notes/image-20250420145601388.png)
+
+------
+
