@@ -1,5 +1,9 @@
 # 强化学习入门
 
+> 补充资料学习路径 [【强化学习的数学原理】课程：从零开始到透彻理解（完结）_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1sd4y167NS?spm_id_from=333.788.videopod.episodes&vd_source=a0049af8349a236693bcde865032bcef)
+
+![image-20250512123949920](img/RL_notes/image-20250512123949920.png)
+
 ## 第一章 基本概念
 
 ### 1 基本原理
@@ -216,3 +220,308 @@
 
 ------
 
+
+
+## 第三章 策略学习
+
+### 1 Policy Function $\pi(\textcolor{red}a|\textcolor{green}s)$
+
+- 回顾知识点，$\pi(\textcolor{red}a|\textcolor{green}s)$ 是一个概率密度函数
+- 输入是状态 $\textcolor{green}s$ 
+- 输出是一个多维向量，每个元素是一个动作 $\textcolor{red}a$ 的概率
+- agent 在给定的概率值中随机抽样，并执行对应的动作 $\textcolor{red}a$
+
+### 2 Policy Network $\pi(\textcolor{red}a|\textcolor{green}s;\theta)$
+
+- 当状态与动作不能一一列举的时候，即不能用表格的形式进行记录，需要用函数近似，学习一个函数来近似策略函数
+- 函数近似方法：
+  - 线性函数
+  - 神经网络
+
+- 使用策略神经网络，$\theta$  是神经网络的参数，开始时是随机设置
+
+- ```Softmax``` : 激活函数，使得输出是概率密度。令输出均为正数且加和为一
+
+  ![image-20250420160431654](img/RL_notes/image-20250420160431654.png)
+
+### 3 State-Value Function $V_{\pi}(\textcolor{green}{s_t})$
+
+- $$V_{\pi}(\textcolor{green}{s_t})=\mathbb{E}_{\textcolor{red}{A}}[Q_\pi(\textcolor{green}{s_t},\textcolor{red}{A})]$$
+
+-  $\textcolor{red}{A}\sim \pi(\cdot|\textcolor{green}{s_t})$ : $\textcolor{red}{A}$ 作为随机变量，由 $\pi$ 和 $\textcolor{green}{s_t}$ 决定
+
+- 用期望将动作 $\textcolor{red}{A}$ 消掉
+- 给定 $\text{policy}\ \pi$ ，$V_{\pi}(\textcolor{green}{s_t})$ 可以用于判断当前**状态**的好坏
+- 给定 $\textcolor{green}{s_t}$ ，$V_{\pi}(\textcolor{green}{s_t})$ 可以用于判断当前**策略**的好坏
+
+#### 3.1 近似 State-Value Function $V_{\pi}(\textcolor{green}{s_t})$
+
+- 当 $\textcolor{red}{A}\sim \pi(\cdot|\textcolor{green}{s_t})$ ，$\textcolor{red}{A}$ 是离散的动作时，$V(s; \theta) = \sum_{a} \pi(a \mid s; \theta) \cdot Q_n(s, a)$
+- 目标函数 $J(\theta) = \mathbb{E}_S[V_\theta(S;\theta)]$ ，$S$ 作为随机变量， 目标是让  $J(\theta)$ 越大越好
+- 改进  $J(\theta)$ 用到梯度上升， $J(\theta)$ 越大说明神经网络近似的 $\text{policy}\ \pi$ 越好
+
+#### 3.2 Policy Gradient
+
+- 公式推导过程：
+
+![image-20250420170755201](img/RL_notes/image-20250420170755201.png)
+
+- 等式证明过程：![image-20250420171135260](img/RL_notes/image-20250420171135260.png)
+
+  > 在计算机科学中 $\log$ 表示为 $\ln$ 
+
+- 推到后整理所得的式子为：![image-20250420171602363](img/RL_notes/image-20250420171602363.png)
+
+  
+
+## 第四章 贝尔曼公式
+
+### 1 Motivating examples
+
+- return : The (discounted) sum of the rewards obtained along a trajectory
+
+- how to calculate it?
+
+- Example:  ![image-20250506154556643](img/RL_notes/image-20250506154556643.png)
+
+- $v_i$ : The return obtained starting from $s_i$
+
+  - Method 1: by definition
+
+    ![image-20250506153635014](img/RL_notes/image-20250506153635014.png)
+
+  - Method 2 : Bootstrapping
+
+    ![image-20250506153824900](img/RL_notes/image-20250506153824900.png)
+
+- The value of one state relies on the value of other states. 
+
+- A matrix-vector form is more clear to see how to solve the state values.
+
+  ![image-20250506154512015](img/RL_notes/image-20250506154512015.png)
+
+### 2 State value
+
+- $G_t$ : define as the discounted return
+
+  ![image-20250506160006558](img/RL_notes/image-20250506160006558.png)
+
+- state-value function: The expectation of $G_t$ 
+
+  ![image-20250506160451430](img/RL_notes/image-20250506160451430.png)
+
+- What is the relationship between return and state value?
+
+  - return : 针对单个trajectory
+  - state value : 对多个trajectories求平均值
+  - 如果从一个state出发，一切都是确定性的，只有一条trajectory。从这个state出发得到的return和state value就是一样的
+
+- 作用：可以计算不同策略在同一个state开始的state value，用于判断policy的好坏
+
+### 3 Bellman equation
+
+![image-20250506165008197](img/RL_notes/image-20250506165008197.png)
+
+- $\pi(\textcolor{red}a|\textcolor{green}s)$ is a given policy
+- $p(r|\textcolor{green}s,\textcolor{red}a)$ and $p(s'|\textcolor{green}s,\textcolor{red}a)$  represent the dynamic model or environmental model
+
+Example:  绿色箭头表示当前的policy
+
+![image-20250506165548452](img/RL_notes/image-20250506165548452.png)
+
+consider the state value of $s_1$ :
+
+![image-20250506165939866](img/RL_notes/image-20250506165939866.png)
+$$
+v_\pi(s_1) = 0 + \gamma v_\pi(s_3)
+$$
+利用Bellman公式求解出在给定policy下的各个状态的state-value。
+
+### 4 Bellman equations ：matrix-vector form
+
+如果有 $n$ 个不同的state，那么就可以有 $n$ 个不同的Bellman公式，然后联立公式即可求解出state-value
+
+![image-20250506172001405](img/RL_notes/image-20250506172001405.png)
+
+证明过程：
+
+![image-20250506165008197](img/RL_notes/image-20250506165008197.png)
+
+![image-20250506172253222](img/RL_notes/image-20250506172253222.png)
+
+将公式转化为matrix-vector form
+$$
+v_\pi=r_\pi+\gamma P_\pi v_\pi
+$$
+![image-20250506172817040](img/RL_notes/image-20250506172817040.png)
+
+![image-20250506172911316](img/RL_notes/image-20250506172911316.png)
+
+- Example:  绿色箭头表示当前的policy
+
+  ![image-20250506165548452](img/RL_notes/image-20250506165548452.png)
+
+  ![image-20250506173028731](img/RL_notes/image-20250506173028731.png)
+
+### 5 Bellman equations ：solve state value
+
+Why to solve state value?
+
+- policy evaluation: given a policy, finding out the corresponding state values. (根据state-value再对policy进行改进)
+- 使用Bellman公式求解state-value
+
+![image-20250506174235849](img/RL_notes/image-20250506174235849.png)
+
+### 6 Action value
+
+Why do we care action value?
+
+- Because we want to know which action is better. 
+
+Definition:
+$$
+Q_\pi(\textcolor{green}{s_t},\textcolor{red}{a_t})=\mathbb{E}[G_t|\textcolor{green}{S_t=s_t},\textcolor{red}{A_t=a_t}]
+$$
+action value 和 state value 的联系
+
+- ![image-20250507163606137](img/RL_notes/image-20250507163606137.png)
+- ![image-20250507163854334](img/RL_notes/image-20250507163854334.png)
+
+因此若已知action_value可以求出state_value,反之亦然
+
+## 第五章 贝尔曼最优公式
+
+![image-20250507170453214](img/RL_notes/image-20250507170453214.png)
+
+![image-20250507170534673](img/RL_notes/image-20250507170534673.png)
+
+矩阵向量形式
+
+![image-20250507170819384](img/RL_notes/image-20250507170819384.png)
+
+- Theorem(Contraction Mapping Theorem)
+
+## 第六章 值迭代和策略迭代
+
+### 值迭代算法 (Value Iteration Algorithm)
+
+#### 过程总结：
+
+vₖ(s) → qₖ(s,a) → 贪婪策略 πₖ₊₁(a|s) → 新值 vₖ₊₁ = maxₐ qₖ(s,a)
+
+#### 伪代码：值迭代算法
+
+**初始化**：所有(s,a)的概率模型p(r|s,a)和p(s'|s,a)已知。初始猜测v₀。
+
+**目标**：求解贝尔曼最优方程，搜索最优状态值和最优策略。
+
+当vₖ尚未收敛（即||vₖ - vₖ₋₁||大于预定义的小阈值）时，对第k次迭代，执行以下操作：
+
+- 对每个状态s ∈ S，执行：
+  - 对每个动作a ∈ A(s)，执行：
+    - Q值：qₖ(s,a) = ∑ₓ p(r|s,a)r + γ∑ₛ' p(s'|s,a)vₖ(s')
+    - 最大动作值：a*ₖ(s) = arg maxₐ qₖ(a,s)
+    - 策略更新：如果a = a*，则πₖ₊₁(a|s) = 1，否则πₖ₊₁(a|s) = 0
+    - 值更新：vₖ₊₁(s) = maxₐ qₖ(a,s)
+
+举例说明
+
+使用q-table记录，对于Policy update
+
+![image-20250605170146575](img/RL_notes/image-20250605170146575.png)
+
+第一轮迭代
+
+根据 $v_0$ 更新 q-table
+
+![image-20250605170719497](img/RL_notes/image-20250605170719497.png)
+
+根据新的 q-table 选出每一个 state 中最大的 a ，以下为更新的 Policy
+
+![image-20250605170705904](img/RL_notes/image-20250605170705904.png)
+
+然后再更新下一轮的 $v_1$ 
+
+![image-20250605171008875](img/RL_notes/image-20250605171008875.png)
+
+### 策略迭代算法 (Policy Iteration Algorithm)
+
+- 与价值迭代对比
+
+![image-20250607163510463](img/RL_notes/image-20250607163510463.png)
+
+![image-20250607163845815](img/RL_notes/image-20250607163845815.png)
+
+### 截断策略迭代算法
+
+在利用Bellman公式进行迭代计算时，价值迭代和策略迭代的区别
+
+![image-20250607164806600](img/RL_notes/image-20250607164806600.png)
+
+| **维度** |        标准策略迭代        |              截断策略迭代              |
+| :------: | :------------------------: | :------------------------------------: |
+| 策略评估 | 无限次迭代直至 *V**π* 收敛 |       仅 *k* 次迭代（*k* 有限）        |
+| 计算效率 |   低（尤其状态空间大时）   |           高（减少迭代次数）           |
+|  收敛性  |     严格收敛到最优策略     | 仍收敛到最优策略（因策略改进是贪心的） |
+| 适用场景 |  小状态空间（如网格世界）  |       大状态空间（如机器人控制）       |
+
+### **伪代码实现**
+
+以下是截断策略迭代的伪代码示例（以离散状态/动作为例）：
+
+```python
+def truncated_policy_iteration(env, gamma=0.9, k=5, max_iters=100):
+    # 初始化策略（确定性策略示例）
+    n_states = env.n_states  # 环境 state 数
+    n_actions = env.n_actions  # 每个 state 对应的 action
+    policy = np.ones((n_states, n_actions)) / n_actions  # 初始随机策略
+    
+    # 初始化值函数
+    V = np.zeros(n_states)
+    
+    for _ in range(max_iters):  # iteration
+        # 策略评估（截断：k次迭代）
+        for _ in range(k):  # k 轮迭代后，得出对应的 value function
+            new_V = np.zeros(n_states)
+            for s in range(n_states):
+                for a in range(n_actions):
+                    # 计算动作a的期望回报
+                    expected_reward = sum(
+                        P[s][a][s_prime] * (R[s][a][s_prime] + gamma * V[s_prime])
+                        for s_prime in range(n_states)  
+                    )
+                    new_V[s] += policy[s][a] * expected_reward
+            V = new_V
+        
+        # 策略改进（贪心更新）
+        policy_stable = True
+        for s in range(n_states):
+            old_action = np.argmax(policy[s])   
+            # 计算每个动作的Q值（基于当前V）
+            Q_values = [
+                sum(
+                    P[s][a][s_prime] * (R[s][a][s_prime] + gamma * V[s_prime])
+                    for s_prime in range(n_states)
+                )
+                for a in range(n_actions)
+            ]
+            best_action = np.argmax(Q_values)
+            if old_action != best_action:
+                policy_stable = False
+                policy[s] = np.eye(n_actions)[best_action]  # 确定性策略
+            
+        if policy_stable:
+            break  # 策略稳定，终止
+    
+    return policy, V
+```
+
+## 第七章 蒙特卡洛方法
+
+### MC Basic 算法
+
+- 在实际中很少用到，主要是了解蒙特卡洛的核心原理，与 policy iteration 相识，区别在于 MC Basic 算法不依赖于模型，在 policy evaluation 阶段不需要使用模型 (这里的模型是指在某一 state 下的 action 的概率分布)
+
+- MC Basic 直接估计 action value。因为如果得出 state value 不能直接去改进策略，需要根据 state value 根据模型计算出 action value
+
+![image-20250607232421609](img/RL_notes/image-20250607232421609.png)
